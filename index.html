@@ -4,6 +4,147 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LBMS</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #c0d5f7;
+        margin: 0;
+        padding: 20px;
+        color: #313030;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #2c3e50;
+      }
+
+      .form-group {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+
+      .form-group input {
+        padding: 10px;
+        width: 200px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 16px;
+      }
+
+      .form-group button {
+        padding: 10px 20px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .form-group button:hover {
+        background-color: #2980b9;
+      }
+
+      table {
+        width: 100%;
+        max-width: 1000px;
+        margin: auto;
+        border-collapse: collapse;
+        background-color: white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      th,
+      td {
+        padding: 12px 15px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #34495e;
+        color: white;
+      }
+
+      tr:hover {
+        background-color: #f1f1f1;
+      }
+
+      .borrowed {
+        background-color: #ffe0e0;
+      }
+
+      button {
+        padding: 6px 12px;
+        font-size: 14px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      td button {
+        border: none;
+        color: white;
+      }
+
+      td button:nth-child(1) {
+        background-color: #27ae60;
+      }
+
+      td button:nth-child(1):hover {
+        background-color: #1e8449;
+      }
+
+      td button:nth-child(2) {
+        background-color: #e74c3c;
+      }
+
+      td button:nth-child(2):hover {
+        background-color: #c0392b;
+      }
+
+      @media (max-width: 768px) {
+        table,
+        thead,
+        tbody,
+        th,
+        td,
+        tr {
+          display: block;
+        }
+
+        thead tr {
+          display: none;
+        }
+
+        tr {
+          margin-bottom: 15px;
+          border: 1px solid #ccc;
+          border-radius: 10px;
+          padding: 10px;
+        }
+
+        td {
+          text-align: right;
+          padding-left: 50%;
+          position: relative;
+        }
+
+        td::before {
+          content: attr(data-label);
+          position: absolute;
+          left: 15px;
+          width: 45%;
+          text-align: left;
+          font-weight: bold;
+        }
+      }
+    </style>
   </head>
   <body>
     <h1>Library Management System</h1>
@@ -29,8 +170,6 @@
     </table>
 
     <script>
-      let serialNumber = 1;
-
       function generateCustomID() {
         const today = new Date();
         const yyyy = today.getFullYear();
@@ -38,13 +177,18 @@
         const dd = String(today.getDate()).padStart(2, "0");
 
         const datePart = `${yyyy}${mm}${dd}`;
-        const serialPart = String(serialNumber).padStart(3, "0");
 
-        const customID = `ID${datePart}${serialPart}`;
-        serialNumber++;
+        // Generate a random 3-digit number
+        let randomPart;
+        let customID;
+
+        // Keep generating until a unique ID is found
+        do {
+          randomPart = Math.floor(100 + Math.random() * 900); // Ensures 100–999
+          customID = `ID${datePart}${randomPart}`;
+        } while (books.some((book) => book.id === customID));
+
         return customID;
-
-        // Increment for next ID
       }
 
       let books = JSON.parse(localStorage.getItem("books")) || [];
@@ -104,7 +248,6 @@
         });
       }
 
-      // Initial load
       displayBooks();
     </script>
   </body>
